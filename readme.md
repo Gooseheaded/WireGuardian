@@ -37,7 +37,7 @@ That should generate the `config.ini` and `wireguardian.ini` files for you. Your
 
 Now, you activate the virtualenv and run Flask:
 ```
-$ flask run
+$ flask run --host:0.0.0.0
 ```
 
 You now have a webserver running on port 5000. Your peers can now go to http://your-ip-address:5000/wireguard , where they can submit their public keys. WireGuardian will generate the wg config files for you and your peers.
