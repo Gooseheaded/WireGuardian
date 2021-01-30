@@ -2,17 +2,16 @@ import sys
 import configparser
 import os.path
 from datetime import datetime
-
-
 from collections import OrderedDict
 
+wgConfFileName = 'wireguardian.conf'
 
 def __rtfm():
     print('WireGuardian')
     print('version 1.0.0')
     print('')
     print('Usage:')
-    print('wireguardian server\t\tConfigure this wireguardian so that peers can connect to you.')
+    print('wireguardian init\t\tConfigure this wireguardian so that peers can connect to you.')
     print(
         'wireguardian client [publickey]\t\tCreate a wg conf file for a peer.')
 
@@ -25,11 +24,12 @@ def __log(message):
 def createServerConfig():
     __log('Creating new server configuration file.')
 
+    print("You are now configuring wireguardian. Provide the data you want for your wireguard network:\n")
     # CIDR
     cidr = ''
     is_cidr_valid = False
     while not is_cidr_valid:
-        cidr = input('CIDR (xxx.xxx.xxx.xxx/yy): ')
+        cidr = input('Wireguard network CIDR (xxx.xxx.xxx.xxx/yy): ')
         is_cidr_valid = True
         # if not re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$', cidr):
         #    print('ERROR: Invalid CIDR. A valid CIDR is xxx.xxx.xxx.xxx/yy')
@@ -38,7 +38,7 @@ def createServerConfig():
     port = 0
     is_port_valid = False
     while not is_port_valid:
-        port = input('Listen on port: ')
+        port = input('Wireguard will listen on port: ')
         try:
             port = int(port)
         except:
@@ -53,14 +53,14 @@ def createServerConfig():
     endpoint = ''
     is_endpoint_valid = False
     while not is_endpoint_valid:
-        endpoint = input('Endpoint (IP or URL) (NO PORT): ')
+        endpoint = input('Your public endpoint (IP or URL) is: ')
         is_endpoint_valid = True
 
     # Private Key
     privkey = ''
     is_privkey_valid = False
     while not is_privkey_valid:
-        privkey = input('Private key file name: ')
+        privkey = input('Wireguard private key file name: ')
         if not os.path.exists(privkey):
             print('ERROR: File does not exist.')
             continue
@@ -72,7 +72,7 @@ def createServerConfig():
     pubkey = ''
     is_pubkey_valid = False
     while not is_pubkey_valid:
-        pubkey = input('Public key file name: ')
+        pubkey = input('Wireguard public key file name: ')
         if not os.path.exists(pubkey):
             print('ERROR: File does not exist.')
             continue
@@ -81,7 +81,7 @@ def createServerConfig():
         is_pubkey_valid = True
 
     # Create the config file
-    with open('config.ini', 'w') as config:
+    with open(wgConfFileName, 'w') as config:
         config.writelines(['[Interface]\n',
                            'Address = ' + str(cidr) + '\n',
                            'ListenPort = ' + str(port) + '\n',
@@ -95,7 +95,7 @@ def createServerConfig():
                            'PrivateKey = ' + str(privkey)])
 
     __log('Created config.ini and wireguardian.ini.')
-    return ('config.ini', 'wireguardian.ini')
+    return (wgConfFileName, 'wireguardian.ini')
 
 
 peers = []
@@ -109,14 +109,14 @@ class __peerReader(OrderedDict):
 
 
 def createClientConfig(pubkey):
-    if not os.path.exists('config.ini'):
+    if not os.path.exists(wgConfFileName):
         __log('[ERROR][createClientConfig]: Tried to create a client config for pubkey "' +
               pubkey + '", but this wireguardian has not been configured to serve clients yet.')
         return 'ERROR: This wireguardian has not been configured to serve clients yet.'
 
     config = configparser.ConfigParser(
         defaults=None, dict_type=__peerReader, strict=False)
-    config.read('config.ini')
+    config.read(wgConfFileName)
 
     serverAddress = str(config['Interface']['Address'])
     serverAddress = serverAddress[:serverAddress.rindex('.')] + '.0/24'
@@ -184,7 +184,7 @@ def __main(argv):
             return
         clientConfig = createClientConfig(argv[1])
         print(clientConfig)
-    elif argv[0] == 'server':
+    elif argv[0] == 'init':
         files = createServerConfig()
         print('wg server config created: ' + files[0])
         print('wireguardian config created: ' + files[1])

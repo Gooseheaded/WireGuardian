@@ -6,7 +6,7 @@ A stupid simple python script to help wireguard peering.
 
 This script is *stupid simple* and not robust whatsoever. CIDRs are not validated, the private key is stored plainly in `wireguardian.ini`, the fake 'DHCP' does not wrap around 255, etc.
 
-As the 'server', you just need to run `wireguardian.py server` on a terminal (read below, 'Usage'). Only you need to run WireGuardian.
+As the 'server', you just need to run `wireguardian.py init` on a terminal (read below, 'Usage'). Only you need to run WireGuardian.
 
 For your 'clients', a flask webserver is included, so they can interact with WireGuardian through a browser. Peers do not need to run WireGuardian.
 
@@ -15,14 +15,14 @@ For your 'clients', a flask webserver is included, so they can interact with Wir
 On Linux:
 ```
 $ python3 -m venv flask
-$ . venv/bin/activate
+$ . flask/bin/activate
 $ pip install Flask
 ```
 
 On Windows (PowerShell):
 ```
 $ python3 -m venv flask
-$ venv/Scripts/activate
+$ flask/Scripts/activate
 $ pip install Flask
 ```
 
@@ -33,11 +33,11 @@ First, you need to create an initial configuration for this instance of WireGuar
 $ python3 ./wireguardian.py server
 ```
 
-That should generate the `config.ini` and `wireguardian.ini` files for you. Your wireguard config file is `config.ini`.
+That should generate the `wireguardian.conf` and `wireguardian.ini` files for you. Your wireguard config file is `wireguardian.ini`.
 
-Now, you activate the virtualenv and run Flask:
+Now, you activate the flask webserver:
 ```
-$ flask run --host:0.0.0.0
+$ flask run --host=0.0.0.0
 ```
 
 You now have a webserver running on port 5000. Your peers can now go to http://your-ip-address:5000/wireguard , where they can submit their public keys. WireGuardian will generate the wg config files for you and your peers.
