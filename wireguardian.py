@@ -94,7 +94,7 @@ def createServerConfig():
                            'PublicKey = ' + str(pubkey) + '\n',
                            'PrivateKey = ' + str(privkey)])
 
-    __log('Created config.ini and wireguardian.ini.')
+    __log('Created wireguardian.conf and wireguardian.ini.')
     return (wgConfFileName, 'wireguardian.ini')
 
 
@@ -168,7 +168,7 @@ def createClientConfig(pubkey):
     newServerSection += 'AllowedIPs = ' + newClientAddress + '\n'
     newServerSection += 'PublicKey = ' + str(pubkey)
 
-    with open('config.ini', 'a') as config:
+    with open(wgConfFileName, 'a') as config:
         config.write(newServerSection)
 
     __log('[INFO][createClientConfig]: Created a new client config for pubkey "' +

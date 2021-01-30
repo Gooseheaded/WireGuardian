@@ -4,7 +4,7 @@ A stupid simple python script to help wireguard peering.
 
 ## Notes
 
-This script is *stupid simple* and not robust whatsoever. CIDRs are not validated, the private key is stored plainly in `wireguardian.ini`, the fake 'DHCP' does not wrap around 255, etc.
+This script is *stupid simple* and not robust whatsoever. CIDRs are not validated, the private key is stored plainly in `wireguardian.conf`, the fake 'DHCP' does not wrap around 255, etc.
 
 As the 'server', you just need to run `wireguardian.py init` on a terminal (read below, 'Usage'). Only you need to run WireGuardian.
 
@@ -33,7 +33,7 @@ First, you need to create an initial configuration for this instance of WireGuar
 $ python3 ./wireguardian.py init
 ```
 
-That should generate the `wireguardian.conf` and `wireguardian.ini` files for you. Your wireguard config file is `wireguardian.ini`.
+That should generate the `wireguardian.conf` (your wireguard conf gile) and `wireguardian.ini` (wiureguardian metadata file) files for you.
 
 Now, you activate the flask webserver:
 ```
