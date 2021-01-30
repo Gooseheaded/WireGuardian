@@ -30,7 +30,7 @@ $ pip install Flask
 
 First, you need to create an initial configuration for this instance of WireGuardian:
 ```
-$ python3 ./wireguardian.py server
+$ python3 ./wireguardian.py init
 ```
 
 That should generate the `wireguardian.conf` and `wireguardian.ini` files for you. Your wireguard config file is `wireguardian.ini`.
