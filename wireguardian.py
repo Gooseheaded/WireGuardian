@@ -166,7 +166,8 @@ def createClientConfig(pubkey):
 
     newServerSection = '\n\n[Peer]\n'
     newServerSection += 'AllowedIPs = ' + newClientAddress + '\n'
-    newServerSection += 'PublicKey = ' + str(pubkey)
+    newServerSection += 'PublicKey = ' + str(pubkey) + '\n'
+    newServerSection += 'PersistentKeepAlive = 25\n'
 
     with open(wgConfFileName, 'a') as config:
         config.write(newServerSection)
@@ -187,7 +188,7 @@ def __main(argv):
     elif argv[0] == 'init':
         files = createServerConfig()
         print('wg server config created: ' + files[0])
-        print('wireguardian config created: ' + files[1])
+        print('wireguardian metadata created: ' + files[1])
     else:
         __rtfm()
 
